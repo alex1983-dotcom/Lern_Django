@@ -1,0 +1,42 @@
+# Игнорировать папку конфигурации PyCharm
+.idea/
+
+# Игнорировать файлы миграций
+*/migrations/*.pyc
+
+# Игнорировать файлы кэша
+__pycache__/
+*.pyc
+
+# SQLite database
+db.sqlite3
+db.sqlite3-journal
+
+# Игнорировать виртуальные среды
+env/
+venv/
+.env/
+myenv/
+
+# VS Code
+.vscode/
+
+# Логи
+*.log
+
+# Временные файлы
+*.tmp
+*.bak
+
+# Django configuration
+*.env
+.env
+.env.*
+
+# Сборки и зависимости
+build/
+dist/
+
+# Результаты тестов и покрытия
+.coverage
+htmlcov/
