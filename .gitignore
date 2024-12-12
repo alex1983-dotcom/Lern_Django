@@ -3,10 +3,14 @@
 
 # Игнорировать файлы миграций
 */migrations/*.pyc
+# Ignore Python cache files
 
 # Игнорировать файлы кэша
 __pycache__/
+*.py[cod]
 *.pyc
+
+
 
 # SQLite database
 db.sqlite3
