@@ -15,4 +15,5 @@
     </p>
     {{ post.body|truncatewords:30|safe }}
   {% endfor %}
+  {% include "pagination.html" with page=posts %}
 {% endblock %}

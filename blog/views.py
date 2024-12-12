@@ -1,19 +1,21 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post
 import markdown
+from django.core.paginator import Paginator
 
 
 def post_list(request):
     posts = Post.published.all()
 
+    # Постраничная разбивка с тремя постами на страницу
+    paginator = Paginator(posts, 3)
+    page_number = request.GET.get('page', 1)
+    posts = paginator.page(page_number)
+
     # Преобразование текста из Markdown в HTML для каждого поста
     for post in posts:
         post.body = markdown.markdown(post.body)  # Преобразование только тела статьи
 
-    # Вывод для отладки
-    for post in posts:
-        print(f"Post ID: {post.id}, Title: {post.title}, Slug: {post.slug}")
-        print(f"Generated URL: {post.get_absolute_url()}")
 
     return render(request, 'blog/post/list.html', {'posts': posts})
 
