@@ -6,13 +6,15 @@
   <h1>My Blog</h1>
   {% for post in posts %}
     <h2>
-      <a href="{% url 'blog:post_detail' post.id %}">
+      <a href="{{ post.get_absolute_url }}">
         {{ post.title }}
       </a>
     </h2>
     <p class="date">
       Published {{ post.publish }} by {{ post.author }}
     </p>
-    {{ post.body|truncatewords:30|linebreaks }}
+    <p>Slug: {{ post.slug }}</p>  <!-- Отладочный вывод -->
+    <p>URL: {{ post.get_absolute_url }}</p> <!-- Отладочный вывод -->
+    {{ post.body|truncatewords:30|safe }}
   {% endfor %}
 {% endblock %}
