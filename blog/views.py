@@ -3,29 +3,19 @@ from .models import Post
 import markdown
 
 
-
 def post_list(request):
     posts = Post.published.all()
 
+    # Преобразование текста из Markdown в HTML для каждого поста
     for post in posts:
-        # Добавим вывод для отладки
+        post.body = markdown.markdown(post.body)  # Преобразование только тела статьи
+
+    # Вывод для отладки
+    for post in posts:
         print(f"Post ID: {post.id}, Title: {post.title}, Slug: {post.slug}")
         print(f"Generated URL: {post.get_absolute_url()}")
 
-    transformed_posts = []
-    for post in posts:
-        transformed_post = Post(
-            id=post.id,
-            title=post.title,
-            body=markdown.markdown(post.body),
-            publish=post.publish,
-            author=post.author,
-            status=post.status
-        )
-        transformed_posts.append(transformed_post)
-
-    return render(request, 'blog/post/list.html', {'posts': transformed_posts})
-
+    return render(request, 'blog/post/list.html', {'posts': posts})
 
 
 def post_detail(request, year, month, day, post):

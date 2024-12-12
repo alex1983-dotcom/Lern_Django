@@ -13,8 +13,6 @@
     <p class="date">
       Published {{ post.publish }} by {{ post.author }}
     </p>
-    <p>Slug: {{ post.slug }}</p>  <!-- Отладочный вывод -->
-    <p>URL: {{ post.get_absolute_url }}</p> <!-- Отладочный вывод -->
     {{ post.body|truncatewords:30|safe }}
   {% endfor %}
 {% endblock %}
