@@ -143,3 +143,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     # Добавьте другие разрешенные источники здесь
 ]
+
+# Конфигурация сервера электронной почты
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'alebarda2018@gmail.com'
+EMAIL_HOST_PASSWORD = 'myanna_777_cng'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
