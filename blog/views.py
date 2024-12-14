@@ -3,7 +3,6 @@ from .models import Post
 import markdown
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import EmailPostForm
-from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
 
