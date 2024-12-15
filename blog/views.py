@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
+from django.db.models import Count
 
 
 def post_list(request, tag_slug=None):
