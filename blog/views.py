@@ -6,11 +6,15 @@ from .forms import EmailPostForm, CommentForm
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from django.views.decorators.http import require_POST
+from taggit.models import Tag
 
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     posts = Post.published.all()
-
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        posts = posts.filter(tags__in=[tag])
     # Постраничная разбивка с тремя постами на страницу
     paginator = Paginator(posts, 3)
     page_number = request.GET.get('page', 1)
@@ -29,7 +33,8 @@ def post_list(request):
     for post in posts:
         post.body = markdown.markdown(post.body)  # Преобразование только тела статьи
 
-    return render(request, 'blog/post/list.html', {'posts': posts})
+    return render(request, 'blog/post/list.html', {'posts': posts,
+                                                                        'tag': tag})
 
 
 def post_detail(request, year, month, day, post):
