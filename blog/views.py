@@ -71,7 +71,7 @@ def post_share(request, post_id):
             subject = f"{cd['name']} рекомендует прочитать \"{post.title}\""
             message = f"Прочитать \"{post.title}\" можно по ссылке: {post_url}\n\n" \
                       f"Комментарии от {cd['name']} ({cd['your_email']}): {cd['comments']}"
-            email = EmailMessage(subject, message, 'tiresservice777@yandex.by', [cd['to_whom']])
+            email = EmailMessage(subject, message, 'Engineered Thoughts <tiresservice777@yandex.by>', [cd['to_whom']])
             email.content_subtype = 'plain'
             email.charset = 'UTF-8'
             try:
