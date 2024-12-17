@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.postgres',
     'mdeditor',
+    'markdownx',
 ]
 
 
@@ -58,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'blog.middleware.NosniffMiddleware',
 ]
 
 ROOT_URLCONF = 'MyWebsite.urls'
@@ -165,7 +168,7 @@ EMAIL_USE_TLS = True
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 
 # Настройки для MDEditor
@@ -202,4 +205,26 @@ MDEDITOR_CONFIGS = {
 }
 
 # Установите нужный язык для всего проекта
-LANGUAGE_CODE = 'ru'  # Для английского
+LANGUAGE_CODE = 'en'  # Для английского
+
+# Безопасные заголовки
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Настройки Markdown
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.codehilite',
+    'markdown.extensions.toc',
+    'markdown.extensions.smarty',
+    'markdown.extensions.nl2br',
+    'markdown.extensions.sane_lists',
+    'markdown.extensions.wikilinks',
+]
+
+MARKDOWNX_MEDIA_PATH = 'markdownx/'
+MARKDOWNX_UPLOAD_URLS_PATH = 'markdownx/upload/'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

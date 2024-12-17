@@ -6,7 +6,6 @@ from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from mdeditor.fields import MDTextField
 
-
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
@@ -70,3 +69,26 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.name}  on {self.post}"
 
+
+from django.db import models
+import os
+
+class Image(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='images/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            ext = self.image.name.split('.')[-1]
+            self.image.name = f"{self.title}.{ext}"
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        storage, path = self.image.storage, self.image.path
+        super().delete(*args, **kwargs)
+        if os.path.exists(path):
+            os.remove(path)
+
+    def __str__(self):
+        return self.title

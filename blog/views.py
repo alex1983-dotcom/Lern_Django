@@ -35,11 +35,13 @@ def post_list(request, tag_slug=None):
 
     total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
 
-    return render(request, 'blog/post/list.html', {
+    response = render(request, 'blog/post/list.html', {
         'posts': posts,
         'tag': tag,
         'total_posts': total_posts
     })
+    response['X-Content-Type-Options'] = 'nosniff'
+    return response
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post,
@@ -57,12 +59,14 @@ def post_detail(request, year, month, day, post):
 
     total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
 
-    return render(request,
-                  'blog/post/detail.html',
-                  {'post': post,
-                   'comments': comments,
-                   'form': form,
-                   'total_posts': total_posts})
+    response = render(request,
+                      'blog/post/detail.html',
+                      {'post': post,
+                       'comments': comments,
+                       'form': form,
+                       'total_posts': total_posts})
+    response['X-Content-Type-Options'] = 'nosniff'
+    return response
 
 def post_share(request, post_id):
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
@@ -90,7 +94,9 @@ def post_share(request, post_id):
 
     total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
 
-    return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent, 'total_posts': total_posts})
+    response = render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent, 'total_posts': total_posts})
+    response['X-Content-Type-Options'] = 'nosniff'
+    return response
 
 @require_POST
 def post_comment(request, post_id):
@@ -110,11 +116,13 @@ def post_comment(request, post_id):
 
     total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
 
-    return render(request, 'blog/post/comment.html',
-                                 {'post': post,
-                                  'form': form,
-                                  'comment': comment,
-                                  'total_posts': total_posts})
+    response = render(request, 'blog/post/comment.html',
+                      {'post': post,
+                       'form': form,
+                       'comment': comment,
+                       'total_posts': total_posts})
+    response['X-Content-Type-Options'] = 'nosniff'
+    return response
 
 def post_search(request):
     form = SearchForm()
@@ -131,9 +139,11 @@ def post_search(request):
 
     total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
 
-    return render(request,
-                  'blog/post/search.html',
-                  {'form': form,
-                   'query': query,
-                   'results': results,
-                   'total_posts': total_posts})
+    response = render(request,
+                      'blog/post/search.html',
+                      {'form': form,
+                       'query': query,
+                       'results': results,
+                       'total_posts': total_posts})
+    response['X-Content-Type-Options'] = 'nosniff'
+    return response

@@ -11,14 +11,19 @@
 
 /* Стили для заголовков в detail.html, share.html и search.html */
 .detail-title, .normal-title {
-font-family: 'Merriweather', serif;
-font-size: 35px;
+    font-family: 'Merriweather', serif;
+    font-size: 35px;
 }
 
-.sidebar-title {
-    font-family: 'Dancing Script', cursive;
+/*Стили для боковой панели*/
+.published-posts {
     font-size: 25px;
 }
+
+.search-articles {
+    font-size: 20px;
+}
+
 /* Остальные стили */
 body {
     margin: 0;
@@ -60,11 +65,8 @@ h2 {
     height: 100vh; /* Устанавливаем высоту на 100% высоты окна браузера */
     border-left: 2px solid #ccc; /* Добавляем вертикальную линию */
     overflow-y: auto; /* Добавляем прокрутку, если содержимое превышает высоту окна */
-}
-
-
-
     background: #efefef;
+}
 
 p.date {
     color: #ccc;
