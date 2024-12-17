@@ -12,9 +12,13 @@
 /* Стили для заголовков в detail.html, share.html и search.html */
 .detail-title, .normal-title {
 font-family: 'Merriweather', serif;
-font-size: 25px;
+font-size: 35px;
 }
 
+.sidebar-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 25px;
+}
 /* Остальные стили */
 body {
     margin: 0;
@@ -48,12 +52,19 @@ h2 {
 }
 
 #sidebar {
-    float: right;
+    position: fixed; /* Фиксируем боковую панель */
+    top: 0; /* Устанавливаем верхний отступ */
+    right: 0; /* Устанавливаем правый отступ */
     width: 30%;
     padding: 10px;
-    background: #efefef;
-    height: 100%;
+    height: 100vh; /* Устанавливаем высоту на 100% высоты окна браузера */
+    border-left: 2px solid #ccc; /* Добавляем вертикальную линию */
+    overflow-y: auto; /* Добавляем прокрутку, если содержимое превышает высоту окна */
 }
+
+
+
+    background: #efefef;
 
 p.date {
     color: #ccc;

@@ -5,7 +5,7 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     <link href="{% static 'css/blog.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap"> <!-- Подключение шрифта Dancing Script -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
 </head>
 <body>
@@ -14,9 +14,13 @@
         {% endblock %}
     </div>
     <div id="sidebar">
-        <h2><span translate="no">Blog "Engineered Thoughts"</span></h2>
+        <!-- Добавляем контейнер с flex стилем -->
+        <div style="display: flex; align-items: center;">
+            <img src="{% static 'images/Логотип_1.png' %}" alt="Ваше изображение" style="max-width:120px; height:auto; margin-right:20px;">
+            <h2 class="sidebar-title" style="font-size: 45px;"><span translate="no">Blog "Engineered Thoughts"</span></h2>
+        </div>
         <p>
-            Published {% total_posts %} posts.
+            Published {{ total_posts }} posts.
         </p>
         <p>
             <a href="{% url 'blog:post_search' %}">

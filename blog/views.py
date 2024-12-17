@@ -11,7 +11,6 @@ from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity
 
-
 def post_list(request, tag_slug=None):
     posts = Post.published.all()
     tag = None
@@ -24,21 +23,23 @@ def post_list(request, tag_slug=None):
     try:
         posts = paginator.page(page_number)
     except PageNotAnInteger:
-        # Если page_number не целое число то
-        # выдать первую страницу
+        # Если page_number не целое число, то выдать первую страницу
         posts = paginator.page(1)
     except EmptyPage:
-        # Если page_number находится в не диапазона, то
-        # выдать последнюю страницу результатов
+        # Если page_number находится вне диапазона, то выдать последнюю страницу результатов
         posts = paginator.page(paginator.num_pages)
 
     # Преобразование текста из Markdown в HTML для каждого поста
     for post in posts:
         post.body = markdown.markdown(post.body)  # Преобразование только тела статьи
 
-    return render(request, 'blog/post/list.html', {'posts': posts,
-                                                                        'tag': tag})
+    total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
 
+    return render(request, 'blog/post/list.html', {
+        'posts': posts,
+        'tag': tag,
+        'total_posts': total_posts
+    })
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post,
@@ -54,12 +55,14 @@ def post_detail(request, year, month, day, post):
     # Преобразование текста из Markdown в HTML
     post.body = markdown.markdown(post.body)
 
+    total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
+
     return render(request,
                   'blog/post/detail.html',
                   {'post': post,
                    'comments': comments,
-                   'form': form})
-
+                   'form': form,
+                   'total_posts': total_posts})
 
 def post_share(request, post_id):
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
@@ -85,8 +88,9 @@ def post_share(request, post_id):
     else:
         form = EmailPostForm()
 
-    return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})
+    total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
 
+    return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent, 'total_posts': total_posts})
 
 @require_POST
 def post_comment(request, post_id):
@@ -103,11 +107,14 @@ def post_comment(request, post_id):
         comment.post = post
         # Сохранить комментарий  в базе данных
         comment.save()
+
+    total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
+
     return render(request, 'blog/post/comment.html',
                                  {'post': post,
-                                         'form': form,
-                                         'comment': comment})
-
+                                  'form': form,
+                                  'comment': comment,
+                                  'total_posts': total_posts})
 
 def post_search(request):
     form = SearchForm()
@@ -122,10 +129,11 @@ def post_search(request):
                 similarity=TrigramSimilarity('title', query)
             ).filter(similarity__gt=0.1).order_by('-similarity')
 
+    total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
+
     return render(request,
                   'blog/post/search.html',
                   {'form': form,
                    'query': query,
-                   'results': results})
-
-
+                   'results': results,
+                   'total_posts': total_posts})
