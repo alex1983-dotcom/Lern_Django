@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from mdeditor.fields import MDTextField
+import os
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -70,8 +71,6 @@ class Comment(models.Model):
         return f"Comment by {self.name}  on {self.post}"
 
 
-from django.db import models
-import os
 
 class Image(models.Model):
     title = models.CharField(max_length=200)

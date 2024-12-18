@@ -166,9 +166,9 @@ EMAIL_USE_TLS = True
 
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Настройки для MDEditor
@@ -226,5 +226,3 @@ MARKDOWNX_UPLOAD_URLS_PATH = 'markdownx/upload/'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
