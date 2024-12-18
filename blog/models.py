@@ -84,7 +84,8 @@ class Image(models.Model):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        storage, path = self.image.storage, self.image.path
+        if self.image:
+            path = self.image.path
         super().delete(*args, **kwargs)
         if os.path.exists(path):
             os.remove(path)
