@@ -1,17 +1,19 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Post, Comment
+from .models import Post
 import markdown
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .forms import EmailPostForm, CommentForm, SearchForm
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
-from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity
 
+
 def post_list(request, tag_slug=None):
+    """
+    Представление для отображения списка постов.
+    """
     posts = Post.published.all()
     tag = None
     if tag_slug:
@@ -43,7 +45,11 @@ def post_list(request, tag_slug=None):
     response['X-Content-Type-Options'] = 'nosniff'
     return response
 
+
 def post_detail(request, year, month, day, post):
+    """
+    Представление для отображения деталей поста.
+    """
     post = get_object_or_404(Post,
                              slug=post,
                              status=Post.Status.PUBLISHED,
@@ -68,7 +74,11 @@ def post_detail(request, year, month, day, post):
     response['X-Content-Type-Options'] = 'nosniff'
     return response
 
+
 def post_share(request, post_id):
+    """
+    Представление для отправки поста по электронной почте.
+    """
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
     sent = False
 
@@ -98,8 +108,12 @@ def post_share(request, post_id):
     response['X-Content-Type-Options'] = 'nosniff'
     return response
 
+
 @require_POST
 def post_comment(request, post_id):
+    """
+    Представление для добавления комментария к посту.
+    """
     post = get_object_or_404(Post,
                               id=post_id,
                               status=Post.Status.PUBLISHED)
@@ -124,7 +138,11 @@ def post_comment(request, post_id):
     response['X-Content-Type-Options'] = 'nosniff'
     return response
 
+
 def post_search(request):
+    """
+    Представление для поиска постов.
+    """
     form = SearchForm()
     query = None
     results = []
