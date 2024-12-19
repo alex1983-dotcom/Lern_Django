@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import PostSerializer, CommentSerializer
 from django.contrib.postgres.search import SearchVector
-
+import logging
 
 # Представления для HTML-страниц
 class BlogPostListView(ListView):
@@ -114,7 +114,6 @@ class BlogPostSearchView(FormView):
         results = Post.published.annotate(
             similarity=TrigramSimilarity('title', query)
         ).filter(similarity__gt=0.05).order_by('-similarity')
-        print(f"Query: {query}, Results count: {results.count()}")  # Отладочный вывод
 
         total_posts = Post.published.count()
 
@@ -126,9 +125,6 @@ class BlogPostSearchView(FormView):
         # Дополнительная логика, если необходимо
         return context
 
-    # def form_invalid(self, form):
-    #     context = self.get_context_data(form=form, query='', results=Post.published.none())
-    #     return self.render_to_response(context)
 
 
 # Представления для API с использованием токенов
@@ -213,12 +209,3 @@ class PostSearchView(generics.ListAPIView):
         return Post.published.none()
 
 
-from django.shortcuts import render
-from django.views import View
-from .models import Post
-
-class SimpleSearchView(View):
-    def get(self, request):
-        query = request.GET.get('query', '')
-        results = Post.published.filter(title__icontains=query) if query else []
-        return render(request, 'blog/simple_search.html', {'query': query, 'results': results})

@@ -10,12 +10,16 @@
             Found {{ results.count }} result{{ results.count|pluralize }}
         </h3>
         {% if results %}
-            {% for post in results %}
-                <h4>
-                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-                </h4>
-                {{ post.body|markdown|truncatewords_html:12 }}
-            {% endfor %}
+            <ul>
+                {% for post in results %}
+                    <li>
+                        <h4>
+                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        </h4>
+                    </li>>
+                    {{ post.body|markdown|truncatewords_html:12 }}
+                {% endfor %}
+            </ul>
         {% else %}
             <p>There are no results for your query.</p>
         {% endif %}
