@@ -114,18 +114,26 @@ class BlogPostSearchView(FormView):
         results = Post.published.annotate(
             similarity=TrigramSimilarity('title', query)
         ).filter(similarity__gt=0.05).order_by('-similarity')
-
         total_posts = Post.published.count()
-
-        context = self.get_context_data(form=form, query=query, results=results, total_posts=total_posts)
+        context = {
+            'form': form,
+            'query': query,
+            'results': results,
+            'total_posts': total_posts,
+        }
+        print(f"Form Valid - Query: {query}, Results: {results}, Context: {context}")
         return self.render_to_response(context)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Дополнительная логика, если необходимо
-        return context
-
-
+    def form_invalid(self, form):
+        print("Form is invalid")
+        context = {
+            'form': form,
+            'query': '',
+            'results': Post.published.none(),
+            'total_posts': Post.published.count(),
+        }
+        print(f"Form Invalid - Context: {context}")
+        return self.render_to_response(context)
 
 # Представления для API с использованием токенов
 class PostListView(generics.ListCreateAPIView):

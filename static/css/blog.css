@@ -22,9 +22,6 @@
 
 .search-articles {
     font-size: 20px;
-    /*Временно для теста*/
-    background-color: rgba(255, 0, 0, 0.1); /* Полупрозрачный красный фон */
-    border: 1px solid red; /* Красная рамка */
 }
 
 /* Остальные стили */
