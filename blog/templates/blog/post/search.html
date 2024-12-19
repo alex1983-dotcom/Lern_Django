@@ -1,5 +1,5 @@
 {% extends "blog/base.html" %}
-{% load blog_tags %}
+<!--{% load blog_tags %}-->
 
 {% block title %}Search{% endblock %}
 
@@ -7,18 +7,18 @@
     {% if query %}
         <h1 class="normal-title">Posts containing "{{ query }}"</h1>
         <h3>
-            {% with results.count as total_results %}
-                Found {{ total_results }} result{{ total_results|pluralize }}
-            {% endwith %}
+            Found {{ results.count }} result{{ results.count|pluralize }}
         </h3>
-        {% for post in results %}
-            <h4>
-                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-            </h4>
-            {{ post.body|markdown|truncatewords_html:12 }}
-        {% empty %}
+        {% if results %}
+            {% for post in results %}
+                <h4>
+                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                </h4>
+                {{ post.body|markdown|truncatewords_html:12 }}
+            {% endfor %}
+        {% else %}
             <p>There are no results for your query.</p>
-        {% endfor %}
+        {% endif %}
         <p><a href="{% url 'blog:post_search' %}">Search again</a></p>
     {% else %}
         <h1 class="normal-title">Search articles</h1>

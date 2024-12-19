@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Search</title>
+</head>
+<body>
+    <h1>Simple Search</h1>
+    <form method="get">
+        <label for="query">Query:</label>
+        <input type="text" id="query" name="query">
+        <input type="submit" value="Search">
+    </form>
+    {% if query %}
+        <h2>Query: {{ query }}</h2>
+        {% if results %}
+            <ul>
+                {% for post in results %}
+                    <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
+
+

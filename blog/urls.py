@@ -1,16 +1,15 @@
 from django.urls import path, re_path
-from . import views
+from .views import BlogPostListView, BlogPostDetailView, BlogPostShareView, BlogPostCommentView, BlogPostSearchView
 from .feeds import LatestPostsFeed
-
+from . import views
 app_name = "blog"
 
 urlpatterns = [
-    path("", views.post_list, name="post_list"),
-    re_path(r'^tag/(?P<tag_slug>[-\wа-яА-Я]+)/$', views.post_list, name='post_list_by_tag'),
-    path("<int:year>/<int:month>/<int:day>/<slug:post>/", views.post_detail, name="post_detail"),
-    path("<int:post_id>/share/", views.post_share, name="post_share"),
-    path("<int:post_id>/comment/", views.post_comment, name='post_comment'),
+    path("", BlogPostListView.as_view(), name="post_list"),
+    re_path(r'^tag/(?P<tag_slug>[-\wа-яА-Я]+)/$', BlogPostListView.as_view(), name='post_list_by_tag'),
+    path("<int:year>/<int:month>/<int:day>/<slug:post>/", BlogPostDetailView.as_view(), name="post_detail"),
+    path("<int:post_id>/share/", BlogPostShareView.as_view(), name="post_share"),
+    path("<int:post_id>/comment/", BlogPostCommentView.as_view(), name='post_comment'),
     path('feed/', LatestPostsFeed(), name='post_feed'),
-    path('search/', views.post_search, name='post_search'),
+    path('search/', BlogPostSearchView.as_view(), name='post_search'),
 ]
-
