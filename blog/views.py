@@ -8,6 +8,8 @@ from django.core.mail import EmailMessage
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
 from django.contrib.postgres.search import TrigramSimilarity
+from django.db.models import Count
+
 
 def post_list(request, tag_slug=None):
     """
@@ -64,6 +66,14 @@ def post_detail(request, year, month, day, post):
         comments = post.comments.filter(active=True)
         # Форма для комментирования пользователями
         form = CommentForm()
+
+        # Список схожих постов
+        post_tags_ids = post.tags.values_list('id', flat=True)
+        similar_posts = Post.published.filter(tags__in=post_tags_ids) \
+            .exclude(id=post.id)
+        similar_posts = similar_posts.annotate(same_tags=Count('tags')) \
+                            .order_by('-same_tags', '-publish')[:4]
+
         # Преобразование текста из Markdown в HTML
         post.body = markdown.markdown(post.body)
 
@@ -74,7 +84,8 @@ def post_detail(request, year, month, day, post):
                           {'post': post,
                            'comments': comments,
                            'form': form,
-                           'total_posts': total_posts})
+                           'total_posts': total_posts,
+                           'similar_posts': similar_posts})
         response['X-Content-Type-Options'] = 'nosniff'
         return response
     except Http404:
