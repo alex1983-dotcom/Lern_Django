@@ -104,41 +104,55 @@ class BlogPostCommentView(View):
             'total_posts': total_posts
         })
 
+logger = logging.getLogger(__name__)
 
 class BlogPostSearchView(FormView):
-    template_name = 'blog/post/search.html'
     form_class = SearchForm
+    template_name = 'blog/post/search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_posts'] = Post.published.count()
+        context['query'] = self.request.GET.get('query', '')  # Добавляем query в контекст
+        context['results'] = kwargs.get('results', [])  # Добавляем results в контекст
+        return context
 
     def form_valid(self, form):
         query = form.cleaned_data['query']
+        logger.debug("Форма валидна, выполняется поиск")
         results = Post.published.annotate(
             similarity=TrigramSimilarity('title', query)
-        ).filter(similarity__gt=0.05).order_by('-similarity')
-        total_posts = Post.published.count()
-        context = {
-            'form': form,
-            'query': query,
-            'results': results,
-            'total_posts': total_posts,
-        }
-        print(f"Form Valid - Query: {query}, Results: {results}, Context: {context}")
+        ).filter(similarity__gt=0.1).order_by('-similarity')
+        logger.debug(f"Results count: {results.count()}")
+        # Добавляем результаты в контекст
+        context = self.get_context_data(form=form, query=query, results=results)
         return self.render_to_response(context)
 
     def form_invalid(self, form):
-        print("Form is invalid")
-        context = {
-            'form': form,
-            'query': '',
-            'results': Post.published.none(),
-            'total_posts': Post.published.count(),
-        }
-        print(f"Form Invalid - Context: {context}")
+        logger.debug("Форма не валидна")
+        # Возвращаем пустые результаты при невалидной форме
+        context = self.get_context_data(form=form, query='', results=[])
         return self.render_to_response(context)
+
+    def get(self, request, *args, **kwargs):
+        # Обрабатываем GET-запрос
+        form = self.get_form()
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def post(self, request, *args, **kwargs):
+        # Обрабатываем POST-запрос
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
 
 # Представления для API с использованием токенов
 class PostListView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]  # Требует аутентификацию
+
 
     def get_queryset(self):
         queryset = Post.published.all()

@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from .views import BlogPostListView, BlogPostDetailView, BlogPostShareView, BlogPostCommentView, BlogPostSearchView
 from .feeds import LatestPostsFeed
-from . import views
+
 app_name = "blog"
 
 urlpatterns = [
