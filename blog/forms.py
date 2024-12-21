@@ -1,7 +1,7 @@
 from .models import Comment
-from mdeditor.widgets import MDEditorWidget
 from django import forms
 import logging
+from django.forms import Textarea
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +9,7 @@ class EmailPostForm(forms.Form):
     name = forms.CharField(max_length=30)
     your_email = forms.EmailField()
     to_whom = forms.EmailField()
-    comments = forms.CharField(required=False, widget=MDEditorWidget())
+    comments = forms.CharField(required=False, widget=Textarea)
 
     def clean(self):
         """
@@ -35,7 +35,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['name', 'email', 'body']
         widgets = {
-            'body': MDEditorWidget(),
+            'body': forms.Textarea,
         }
 
     def clean(self):

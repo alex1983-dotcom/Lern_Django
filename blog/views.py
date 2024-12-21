@@ -15,6 +15,8 @@ from rest_framework.views import APIView
 from .serializers import PostSerializer, CommentSerializer
 from django.db.models import Count
 import logging
+from django.shortcuts import render
+
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +38,10 @@ class BlogPostListView(ListView):
             queryset = Post.published.all()
             tag_slug = self.kwargs.get('tag_slug')
             if tag_slug:
-                tag = get_object_or_404(Tag, slug=tag_slug)
-                queryset = queryset.filter(tags__in=[tag])
+                self.tag = get_object_or_404(Tag, slug=tag_slug)
+                queryset = queryset.filter(tags__in=[self.tag])
+            else:
+                self.tag = None
             return queryset
         except Exception as e:
             logger.error(f"Ошибка при получении набора данных: {e}")
@@ -57,11 +61,11 @@ class BlogPostListView(ListView):
                 post.body = markdown.markdown(post.body)
             context['total_posts'] = Post.published.count()
             context['posts'] = page_obj
+            context['tag'] = self.tag
             return context
         except Exception as e:
             logger.error(f"Ошибка при получении контекста данных: {e}")
             return {}
-
 
 class BlogPostDetailView(DetailView):
     """
@@ -116,26 +120,66 @@ class BlogPostDetailView(DetailView):
             raise
 
 
+
+
 class BlogPostShareView(FormView):
+    """
+    Представление для отправки поста блога по электронной почте.
+    """
     template_name = 'blog/post/share.html'
     form_class = EmailPostForm
 
-    def form_valid(self, form):
-        post = get_object_or_404(Post, id=self.kwargs['post_id'], status=Post.Status.PUBLISHED)
-        cd = form.cleaned_data
-        post_url = self.request.build_absolute_uri(post.get_absolute_url())
-        subject = f"{cd['name']} рекомендует прочитать \"{post.title}\""
-        message = f"Прочитать \"{post.title}\" можно по ссылке: {post_url}\n\n" \
-                  f"Комментарии от {cd['name']} ({cd['your_email']}): {cd['comments']}"
-        email = EmailMessage(subject, message, 'Engineered Thoughts <tiresservice777@yandex.by>', [cd['to_whom']])
-        email.content_subtype = 'plain'
-        email.charset = 'UTF-8'
+    def post(self, request, *args, **kwargs):
+        """
+        Обрабатывает POST-запрос и отправляет пост по электронной почте.
+        """
         try:
-            email.send()
-            return self.render_to_response(self.get_context_data(sent=True))
+            post = get_object_or_404(Post, id=self.kwargs['post_id'], status=Post.Status.PUBLISHED)
+            sent = False
+
+            form = self.get_form()
+            if form.is_valid():
+                cd = form.cleaned_data
+                post_url = request.build_absolute_uri(post.get_absolute_url())
+                subject = f"{cd['name']} рекомендует прочитать \"{post.title}\""
+                message = f"Прочитать \"{post.title}\" можно по ссылке: {post_url}\n\n" \
+                          f"Комментарии от {cd['name']} ({cd['your_email']}): {cd['comments']}"
+                email = EmailMessage(subject, message, 'Engineered Thoughts <tiresservice777@yandex.by>', [cd['to_whom']])
+                email.content_subtype = 'plain'
+                email.charset = 'UTF-8'
+                try:
+                    email.send()
+                    sent = True
+                except Exception as e:
+                    return HttpResponse(f"Ошибка отправки письма: {e}")
+
+            total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
+
+            response = render(request, self.template_name, {'post': post, 'form': form, 'sent': sent, 'total_posts': total_posts})
+            response['X-Content-Type-Options'] = 'nosniff'
+            return response
+        except Http404:
+            return HttpResponse("Страница не найдена", status=404)
         except Exception as e:
-            logger.error(f"Ошибка отправки письма: {e}")
-            return HttpResponse(f"Ошибка отправки письма: {e}")
+            return HttpResponse(f"Ошибка: {e}", status=500)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Обрабатывает GET-запрос и отображает форму для отправки поста по электронной почте.
+        """
+        try:
+            post = get_object_or_404(Post, id=self.kwargs['post_id'], status=Post.Status.PUBLISHED)
+            form = self.get_form()
+            total_posts = Post.published.count()  # Подсчитываем количество опубликованных постов
+
+            response = render(request, self.template_name, {'post': post, 'form': form, 'sent': False, 'total_posts': total_posts})
+            response['X-Content-Type-Options'] = 'nosniff'
+            return response
+        except Http404:
+            return HttpResponse("Страница не найдена", status=404)
+        except Exception as e:
+            return HttpResponse(f"Ошибка: {e}", status=500)
+
 
 
 class BlogPostCommentView(View):
