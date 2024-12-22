@@ -65,7 +65,8 @@ class BlogPostListView(ListView):
             return context
         except Exception as e:
             logger.error(f"Ошибка при получении контекста данных: {e}")
-            return {}
+            return HttpResponse(f"Ошибка при получении контекста данных: {e}", status=500)
+
 
 class BlogPostDetailView(DetailView):
     """
@@ -91,10 +92,10 @@ class BlogPostDetailView(DetailView):
             return get_object_or_404(queryset, **filter_kwargs)
         except Http404:
             logger.error("Пост не найден")
-            raise
+            return HttpResponse("Пост не найден", status=404)
         except Exception as e:
             logger.error(f"Ошибка при получении поста: {e}")
-            raise
+            return HttpResponse(f"Ошибка при получении поста: {e}", status=500)
 
     def get_context_data(self, **kwargs):
         """
@@ -117,9 +118,7 @@ class BlogPostDetailView(DetailView):
             return context
         except Exception as e:
             logger.error(f"Ошибка при получении контекста данных: {e}")
-            raise
-
-
+            return HttpResponse(f"Ошибка при получении контекста данных: {e}", status=500)
 
 
 class BlogPostShareView(FormView):
@@ -181,7 +180,6 @@ class BlogPostShareView(FormView):
             return HttpResponse(f"Ошибка: {e}", status=500)
 
 
-
 class BlogPostCommentView(View):
     """
     Представление для добавления комментария к посту блога.
@@ -232,7 +230,8 @@ class BlogPostSearchView(FormView):
                 results = []
         except Exception as e:
             logger.error(f"Ошибка при выполнении поиска: {e}")
-            results = []
+            return HttpResponse(f"Ошибка при выполнении поиска: {e}", status=500)
+
         context = {
             'form': form,
             'query': query,
@@ -245,7 +244,6 @@ class BlogPostSearchView(FormView):
 class PostListView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]  # Требует аутентификацию
-
 
     def get_queryset(self):
         queryset = Post.published.all()
@@ -277,9 +275,13 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         }
         try:
             obj = get_object_or_404(queryset, **filter_kwargs)
+            return obj
         except Http404:
+            logger.error('Пост не найден')
             raise NotFound('Пост не найден')
-        return obj
+        except Exception as e:
+            logger.error(f"Ошибка при получении поста: {e}")
+            raise NotFound(f"Ошибка при получении поста: {e}")
 
 
 class PostShareView(APIView):
@@ -322,10 +324,11 @@ class CommentCreateView(generics.CreateAPIView):
             post = get_object_or_404(Post, id=self.kwargs['post_id'], status=Post.Status.PUBLISHED)
             serializer.save(post=post)
         except Http404:
+            logger.error('Пост не найден')
             raise NotFound('Пост не найден')
         except Exception as e:
             logger.error(f"Ошибка при создании комментария: {e}")
-            raise
+            raise NotFound(f"Ошибка при создании комментария: {e}")
 
 
 class PostSearchView(generics.ListAPIView):

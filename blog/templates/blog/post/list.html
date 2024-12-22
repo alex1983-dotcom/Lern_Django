@@ -1,5 +1,6 @@
 {% extends "blog/base.html" %}
 {% load blog_tags %}
+{% load static %}
 
 {% block title %}Blog "Engineered Thoughts"{% endblock %}
 
@@ -20,7 +21,7 @@
       {% endfor %}
     </p>
     <p class="date">Published {{ post.publish }} by {{ post.author }}</p>
-    {{ post.body|markdown|truncatewords_html:30|safe }}
+    {{ post.body|markdown|truncatewords_html:27|safe }}
 {% endfor %}
 
 {% include "pagination.html" with page=posts %}
@@ -32,4 +33,13 @@
         font-family: 'Dancing Script', cursive;
     }
 </style>
+{% endblock %}
+
+{% block footer %}
+<footer style="padding: 5px; text-align: left; margin-top: -50px; border-top: 1px solid #ccc; height: 50px;">
+    <div style="margin-left: 320px;">
+        <p>&copy; 2024 Engineered Thoughts. All rights reserved.</p>
+        <p>Contact us: <a href="mailto:engineeredthoughts2024@gmail.com">engineeredthoughts2024@gmail.com</a></p>
+    </div>
+</footer>
 {% endblock %}

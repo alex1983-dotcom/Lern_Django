@@ -1,12 +1,7 @@
 /* Стили для list.html */
 .list-title {
     font-family: 'Dancing Script', cursive; /* Использование шрифта Dancing Script */
-}
-
-/* Стили для detail.html */
-.detail-title {
-    font-family: 'Georgia', serif; /* Использование шрифта Merriweather */
-    font-size: 25px;
+    font-size: 45px;
 }
 
 /* Стили для заголовков в detail.html, share.html и search.html */
@@ -22,6 +17,7 @@
 
 .search-articles {
     font-size: 20px;
+    line-height: 0,9;
 }
 
 /* Остальные стили */
@@ -39,14 +35,15 @@ a {
 h1 {
     font-weight: normal;
     border-bottom: 1px solid #bbb;
-    padding: 0 0 15px 0;
+    padding: 0 0 6px 0; /* Уменьшаем нижний отступ */
     font-family: 'Dancing Script', cursive; /* Использование шрифта Dancing Script */
-    font-size: 45px;
+    font-size: 40px; /* Уменьшаем размер шрифта */
+    line-height: 0.9; /* Уменьшаем межстрочное расстояние */
 }
 
 h2 {
     font-weight: normal;
-    margin: 20px 0 0;
+    margin: 5px 0 0;
 }
 
 /* Остальные стили */
@@ -65,7 +62,6 @@ h2 {
     height: 100vh; /* Устанавливаем высоту на 100% высоты окна браузера */
     border-left: 2px solid #ccc; /* Добавляем вертикальную линию */
     overflow-y: auto; /* Добавляем прокрутку, если содержимое превышает высоту окна */
-    background: #efefef;
 }
 
 p.date {
