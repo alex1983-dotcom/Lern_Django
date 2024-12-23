@@ -1,13 +1,12 @@
 {% extends "blog/base.html" %}
 {% load blog_tags %}
-{% load static %}
 
 {% block title %}Blog "Engineered Thoughts"{% endblock %}
 
 {% block content %}
 <h1 class="list-title"><span translate="no">Blog "Engineered Thoughts"</span></h1>
 {% if tag %}
-    <h2>Post tagged with "{{ tag.name }}"</h2>
+    <h2 class="tag-title">Post tagged with "{{ tag.name }}"</h2>
 {% endif %}
 {% for post in posts %}
     <h2>
@@ -21,25 +20,19 @@
       {% endfor %}
     </p>
     <p class="date">Published {{ post.publish }} by {{ post.author }}</p>
-    {{ post.body|markdown|truncatewords_html:27|safe }}
+    <div class="post-body">
+        {{ post.body|markdown|truncatewords_html:27|safe }}
+    </div>
 {% endfor %}
 
 {% include "pagination.html" with page=posts %}
 {% endblock %}
 
-{% block header_style %}
-<style>
-    .list-title {
-        font-family: 'Dancing Script', cursive;
-    }
-</style>
-{% endblock %}
-
 {% block footer %}
-<footer style="padding: 5px; text-align: left; margin-top: -50px; border-top: 1px solid #ccc; height: 50px;">
-    <div style="margin-left: 320px;">
-        <p>&copy; 2024 Engineered Thoughts. All rights reserved.</p>
-        <p>Contact us: <a href="mailto:engineeredthoughts2024@gmail.com">engineeredthoughts2024@gmail.com</a></p>
+<footer style="padding: 5px; text-align: left; margin-top: -40px; border-top: 1px solid #ccc; height: 0px;">
+    <div style="margin-left: 350px;">
+        <p style="line-height: 0.7;">&copy; 2024 Engineered Thoughts. All rights reserved.</p>
+        <p style="line-height: 0.7;">Contact us: <a href="mailto:engineeredthoughts2024@gmail.com">engineeredthoughts2024@gmail.com</a></p>
     </div>
 </footer>
 {% endblock %}

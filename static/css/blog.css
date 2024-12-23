@@ -1,128 +1,194 @@
-/* Стили для list.html */
+/* Основные стили для всего документа */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Serif", serif; /* Шрифт для всего документа */
+    font-size: 17px; /* Размер шрифта для всего тела документа */
+    line-height: 1.3; /* Высота строки для удобочитаемости */
+    background-color: #f9f9f9; /* Цвет фона */
+}
+
+/* Заголовки */
+h1 {
+    font-family: 'Dancing Script', cursive; /* Шрифт для заголовков первого уровня */
+    font-weight: normal;
+    font-size: 40px; /* Размер шрифта */
+    line-height: 0.9; /* Межстрочное расстояние */
+    border-bottom: 1px solid #bbb; /* Нижняя граница */
+    padding-bottom: 15px; /* Отступ снизу */
+}
+
+h2 {
+    font-family: 'Merriweather', serif; /* Шрифт для заголовков второго уровня */
+    font-weight: normal;
+    font-size: 18px; /* Размер шрифта */
+    line-height: 1.2;
+    margin: 8
+    px 0 0; /* Отступы */
+}
+
+/* Стили для заголовка списка */
 .list-title {
-    font-family: 'Dancing Script', cursive; /* Использование шрифта Dancing Script */
-    font-size: 45px;
+    font-family: 'Dancing Script', cursive; /* Шрифт для заголовка списка */
+    font-size: 45px; /* Размер шрифта */
+    text-align: center; /* Выравнивание по центру */
 }
 
 /* Стили для заголовков в detail.html, share.html и search.html */
 .detail-title, .normal-title {
     font-family: 'Merriweather', serif;
     font-size: 35px;
-}
-
-/*Стили для боковой панели*/
-.published-posts {
-    font-size: 25px;
-}
-
-.search-articles {
-    font-size: 20px;
-    line-height: 0,9;
-}
-
-/* Остальные стили */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "noto serif", serif;
-}
-
-a {
-    color: #0395abff;
-    text-decoration: none;
-}
-
-h1 {
-    font-weight: normal;
-    border-bottom: 1px solid #bbb;
-    padding: 0 0 6px 0; /* Уменьшаем нижний отступ */
-    font-family: 'Dancing Script', cursive; /* Использование шрифта Dancing Script */
-    font-size: 40px; /* Уменьшаем размер шрифта */
-    line-height: 0.9; /* Уменьшаем межстрочное расстояние */
-}
-
-h2 {
-    font-weight: normal;
-    margin: 5px 0 0;
-}
-
-/* Остальные стили */
-#content {
-    float: left;
-    width: 60%;
-    padding: 0 0 0 30px;
+    text-align: center;
 }
 
 #sidebar {
     position: fixed; /* Фиксируем боковую панель */
     top: 0; /* Устанавливаем верхний отступ */
     right: 0; /* Устанавливаем правый отступ */
-    width: 30%;
-    padding: 10px;
-    height: 100vh; /* Устанавливаем высоту на 100% высоты окна браузера */
-    border-left: 2px solid #ccc; /* Добавляем вертикальную линию */
-    overflow-y: auto; /* Добавляем прокрутку, если содержимое превышает высоту окна */
-}
-
-p.date {
-    color: #ccc;
-    font-family: georgia, sans-serif;
-    font-size: 13px;
-    font-style: italic;
-}
-
-/* pagination */
-.pagination {
-    margin: 40px 0;
-    font-weight: bold;
-}
-
-/* forms */
-label {
-    float: left;
-    clear: both;
-    color: #333;
-    margin-bottom: 4px;
-}
-
-input, textarea {
-    font-family: georgia, sans-serif;
-    clear: both;
-    float: left;
-    margin: 0 0 10px;
-    background: #ededed;
-    border: 0;
-    padding: 10px 20px;
+    width: 30%; /* Ширина боковой панели */
+    padding: 12px; /* Отступы внутри боковой панели */
+    height: auto; /* Автоматическая высота */
+    max-height: 100vh; /* Максимальная высота на 100% высоты окна браузера */
+    border-left: 2px solid #ccc; /* Вертикальная линия */
+    overflow: hidden; /* Убираем прокрутку */
+    box-sizing: border-box; /* Учитываем отступы и границы в ширине и высоте */
     font-size: 18px;
 }
 
+/* Стили для элементов внутри боковой панели */
+.published-posts,
+.search-articles {
+    margin-bottom: 10px; /* Отступ снизу для плотности */
+}
+
+/* Уменьшаем отступы для элементов внутри боковой панели */
+#sidebar > * {
+    margin: 5px 0; /* Отступы для всех элементов внутри боковой панели */
+}
+
+
+.published-posts {
+    font-size: 20px; /* Размер шрифта для опубликованных постов */
+}
+
+.search-articles {
+    font-size: 20px; /* Размер шрифта для статей поиска */
+    line-height: 1.2; /* Межстрочное расстояние */
+}
+
+/* Параграфы и даты */
+p {
+    margin: 8px 0; /* Отступы для параграфов */
+}
+
+p.date {
+    color: #ccc; /* Цвет для даты */
+    font-family: Georgia, sans-serif; /* Шрифт для даты */
+    font-size: 13px; /* Размер шрифта */
+    font-style: italic; /* Курсив для даты */
+}
+
+/* Стили для ссылок */
+a {
+    color: #0395abff; /* Цвет ссылок */
+    text-decoration: none; /* Убираем подчеркивание */
+}
+
+a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+
+/* Стили для контента и боковой панели */
+#content {
+    float: left; /* Выравнивание влево */
+    width: 60%; /* Ширина основного контента */
+    padding-left: 30px; /* Отступ слева */
+}
+
+/* Пагинация */
+.pagination {
+    margin: 40px 0; /* Отступы для пагинации */
+    font-weight: bold; /* Жирный текст */
+}
+
+/* Формы */
+label {
+    float: left; /* Выравнивание влево */
+    clear: both; /* Очистка обтекания */
+    color: #333; /* Цвет текста */
+    margin-bottom: 4px; /* Отступ снизу */
+}
+
+input, textarea {
+    font-family: Georgia, sans-serif; /* Шрифт для ввода */
+    clear: both; /* Очистка обтекания */
+    float: left; /* Выравнивание влево */
+    margin: 0 0 10px; /* Отступы */
+    background: #ededed; /* Цвет фона */
+    border: 0; /* Убираем границу */
+    padding: 10px 20px; /* Отступы внутри */
+    font-size: 18px; /* Размер шрифта */
+}
+
 input[type=submit] {
-    font-weight: bold;
-    background: #00abff;
-    color: #fff;
-    padding: 15px 20px;
-    font-size: 14px;
-    text-transform: uppercase;
+    font-weight: bold; /* Жирный текст */
+    background: #00abff; /* Фоновый цвет кнопки */
+    color: #fff; /* Цвет текста */
+    padding: 15px 20px; /* Отступы внутри */
+    font-size: 14px; /* Размер шрифта */
+    text-transform: uppercase; /* Заглавные буквы */
+    border: none; /* Убираем границу */
+    cursor: pointer; /* Изменяем курсор на указатель */
 }
 
+/* Стили для ошибок */
 .errorlist {
-    color: #cc0033;
-    float: left;
-    clear: both;
-    padding-left: 10px;
+    color: #cc0033; /* Цвет для ошибок */
+    float: left; /* Выравнивание влево */
+    clear: both; /* Очистка обтекания */
+    padding-left: 10px; /* Отступ слева */
 }
 
-/* comments */
+/* Комментарии */
 .comment {
-    padding: 10px;
+    padding: 10px; /* Отступы внутри комментария */
 }
 
 .comment:nth-child(even) {
-    background: #efefef;
+    background: #efefef; /* Фоновый цвет для четных комментариев */
 }
 
 .comment .info {
-    font-weight: bold;
-    font-size: 16px;
-    color: #666;
+    font-weight: bold; /* Жирный текст для информации о комментарии */
+    font-size: 16px; /* Размер шрифта */
+    color: #666; /* Цвет текста */
+}
+
+/* Дополнительные стили для улучшения */
+.container {
+    max-width: 1200px; /* Максимальная ширина контейнера */
+    margin: 0 auto; /* Центрирование контейнера */
+    padding: 20px; /* Отступы внутри контейнера */
+}
+
+img {
+    max-width: 100%; /* Адаптивные изображения */
+    height: auto; /* Соотношение сторон */
+}
+
+/* Стили для кнопок */
+.button {
+    display: inline-block; /* Отображение в строку */
+    padding: 10px 15px; /* Отступы внутри кнопки */
+    background-color: #007bff; /* Цвет фона кнопки */
+    color: white; /* Цвет текста */
+    border: none; /* Убираем границу */
+    border-radius: 5px; /* Закругленные углы */
+    text-align: center; /* Выравнивание текста по центру */
+    text-decoration: none; /* Убираем подчеркивание */
+    cursor: pointer; /* Изменяем курсор на указатель */
+}
+
+.button:hover {
+    background-color: #0056b3; /* Цвет при наведении */
 }

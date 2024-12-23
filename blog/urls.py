@@ -13,3 +13,4 @@ urlpatterns = [
     path('feed/', LatestPostsFeed(), name='post_feed'),
     path('search/', BlogPostSearchView.as_view(), name='post_search'),
 ]
+
