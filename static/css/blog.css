@@ -22,7 +22,7 @@ h2 {
     font-family: 'Merriweather', serif; /* Шрифт для заголовков второго уровня */
     font-weight: normal;
     font-size: 18px; /* Размер шрифта */
-    line-height: 1.2;
+    line-height: 1.4;
     margin: 8
     px 0 0; /* Отступы */
 }
@@ -82,7 +82,7 @@ p {
 }
 
 p.date {
-    color: #ccc; /* Цвет для даты */
+    color: #A0A0A0; /* Темно-пепельный цвет */ /* Пепельный цвет */ /* Цвет для даты */
     font-family: Georgia, sans-serif; /* Шрифт для даты */
     font-size: 13px; /* Размер шрифта */
     font-style: italic; /* Курсив для даты */
