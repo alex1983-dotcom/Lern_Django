@@ -6,14 +6,20 @@ from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from mdeditor.fields import MDTextField
 from django.core.files.storage import default_storage
+import logging
 
+logger = logging.getLogger(__name__)
 
 class PublishedManager(models.Manager):
     """
     Менеджер для получения только опубликованных постов.
     """
     def get_queryset(self):
-        return super().get_queryset().filter(status=Post.Status.PUBLISHED)
+        try:
+            return super().get_queryset().filter(status=Post.Status.PUBLISHED)
+        except Exception as e:
+            logger.error(f"Ошибка при получении опубликованных постов: {e}")
+            return super().get_queryset().none()
 
 
 class Post(models.Model):
@@ -49,9 +55,13 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         # Переопределяет метод save для автоматического создания slug.
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
+        try:
+            if not self.slug:
+                self.slug = slugify(self.title)
+            super().save(*args, **kwargs)
+        except Exception as e:
+            logger.error(f"Ошибка при сохранении поста: {e}")
+            raise
 
     def get_absolute_url(self):
         # Возвращает абсолютный URL для поста.
@@ -84,6 +94,14 @@ class Comment(models.Model):
         # Возвращает строковое представление модели.
         return f"Comment by {self.name} on {self.post}"
 
+    def save(self, *args, **kwargs):
+        # Переопределяет метод save для обработки ошибок при сохранении комментария.
+        try:
+            super().save(*args, **kwargs)
+        except Exception as e:
+            logger.error(f"Ошибка при сохранении комментария: {e}")
+            raise
+
 
 class Image(models.Model):
     """
@@ -95,18 +113,26 @@ class Image(models.Model):
 
     def save(self, *args, **kwargs):
         # Переопределяет метод save для автоматического создания имени файла.
-        if self.image:
-            ext = self.image.name.split('.')[-1]
-            self.image.name = f"{self.title}.{ext}"
-        super().save(*args, **kwargs)
+        try:
+            if self.image:
+                ext = self.image.name.split('.')[-1]
+                self.image.name = f"{self.title}.{ext}"
+            super().save(*args, **kwargs)
+        except Exception as e:
+            logger.error(f"Ошибка при сохранении изображения: {e}")
+            raise
 
     def delete(self, *args, **kwargs):
         # Переопределяет метод delete для удаления файла из хранилища.
-        if self.image:
-            if default_storage.exists(self.image.name):
-                default_storage.delete(self.image.name)
-                print("Файл успешно удалён.")
-        super().delete(*args, **kwargs)
+        try:
+            if self.image:
+                if default_storage.exists(self.image.name):
+                    default_storage.delete(self.image.name)
+                    print("Файл успешно удалён.")
+            super().delete(*args, **kwargs)
+        except Exception as e:
+            logger.error(f"Ошибка при удалении изображения: {e}")
+            raise
 
     def __str__(self):
         # Возвращает строковое представление модели.

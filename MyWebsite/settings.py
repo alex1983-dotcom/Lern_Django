@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,7 +51,25 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'mdeditor',
     'markdownx',
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
+}
 
 
 MIDDLEWARE = [
@@ -191,6 +209,7 @@ MDEDITOR_CONFIGS = {
             "||", "preview", "watch", "fullscreen"
         ],  # custom edit box toolbar
         'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # image upload format type
+        'upload_image_url': '/mdeditor/uploads/',
         'image_folder': 'images',  # image save the folder name
         'theme': 'default',  # edit box theme, dark / default
         'preview_theme': 'default',  # Preview area theme, dark / default
@@ -214,19 +233,38 @@ LANGUAGE_CODE = 'en'  # Для английского
 # Безопасные заголовки
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# Настройки Markdown
-MARKDOWNX_MARKDOWN_EXTENSIONS = [
-    'markdown.extensions.extra',
-    'markdown.extensions.codehilite',
-    'markdown.extensions.toc',
-    'markdown.extensions.smarty',
-    'markdown.extensions.nl2br',
-    'markdown.extensions.sane_lists',
-    'markdown.extensions.wikilinks',
-]
-
-MARKDOWNX_MEDIA_PATH = 'markdownx/'
-MARKDOWNX_UPLOAD_URLS_PATH = 'markdownx/upload/'
+# # Настройки Markdown
+# MARKDOWNX_MARKDOWN_EXTENSIONS = [
+#     'markdown.extensions.extra',
+#     'markdown.extensions.codehilite',
+#     'markdown.extensions.toc',
+#     'markdown.extensions.smarty',
+#     'markdown.extensions.nl2br',
+#     'markdown.extensions.sane_lists',
+#     'markdown.extensions.wikilinks',
+# ]
+#
+# MARKDOWNX_MEDIA_PATH = 'markdownx/'
+# MARKDOWNX_UPLOAD_URLS_PATH = 'markdownx/upload/'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'blog': {  # Замените на имя вашего приложения
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}

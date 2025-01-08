@@ -9,39 +9,51 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap">
 </head>
 <body>
-    <div id="content">
-        {% block content %}
-        {% endblock %}
-    </div>
-    <div id="sidebar">
-        <!-- Добавляем контейнер с text-align: center -->
-        <div style="text-align: center;">
-            <img src="{% static 'images/Логотип_1.png' %}" alt="Ваше изображение" style="max-width:250px; height:auto; margin-right:20px;">
+    <div id="container" style="display: flex; flex-direction: column; min-height: 100vh;">
+        <div id="content" style="flex: 1;">
+            {% block content %}
+            {% endblock %}
         </div>
-        <p class="published-posts">
-            Published {{ total_posts }} posts
-        </p>
-        <p class="search-articles">
-            <a href="{% url 'blog:post_search' %}">
-                Search articles
-            </a>
-            <br>
-            <a href="{% url 'blog:post_feed' %}">
-                Subscribe to my RSS feed
-            </a>
-        </p>
-        <h3 >Latest articles</h3>
-        {% show_latest_posts 3 %}
-        <h3>Most commented posts</h3>
-        {% get_most_commented_posts as most_commented_posts %}
-        <ul>
-            {% for post in most_commented_posts %}
-            <li>
-                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
+        <div id="sidebar">
+            <!-- Добавляем контейнер с text-align: center -->
+            <div style="text-align: center;">
+                <img src="{% static 'images/Логотип_1.png' %}" alt="Ваше изображение" style="max-width:240px; height:auto; margin-right:20px;">
+            </div>
+            <p class="published-posts">
+                Published {{ total_posts }} posts
+            </p>
+            <p class="search-articles" style="line-height: 0.8;">
+                <a href="{% url 'blog:post_list' %}" style="display: flex; align-items: center;">
+                    <img src="{% static 'images/Домой.jpg' %}" alt="Home" style="width:40px; height:40px; background: transparent; background-color: transparent;">
+                    <span style="margin-left: 8px;">Home page</span>
+                </a>
+                <br>
+                <a href="{% url 'blog:post_search' %}" style="display: flex; align-items: center;">
+                    <img src="{% static 'images/Поиск.jpg' %}" alt="Search" style="width:40px; height:40px; background: transparent; background-color: transparent;">
+                    <span style="margin-left: 8px;">Search articles</span>
+                </a>
+                <br>
+                <a href="{% url 'blog:post_feed' %}" style="display: flex; align-items: center;">
+                    <img src="{% static 'images/RSS.jpg' %}" alt="RSS" style="width:40px; height:40px; background: transparent; background-color: transparent;">
+                    <span style="margin-left: 8px;">Subscribe to my RSS feed</span>
+                </a>
+            </p>
+            <h3>Latest articles</h3>
+            {% show_latest_posts 3 %}
+            <h3>Most commented posts</h3>
+            {% get_most_commented_posts as most_commented_posts %}
+            <ul>
+                {% for post in most_commented_posts %}
+                <li>
+                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <footer style="width: 65%; padding: 25px; text-align: left; margin-top: 0px;">
+            {% block footer %}
+            {% endblock %}
+        </footer>
     </div>
 </body>
 </html>
-
